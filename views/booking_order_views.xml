@@ -16,12 +16,14 @@
                     <xpath expr="//field[@name='partner_id']/../field[last()]" position="after">
                         <div colspan="2" attrs="{'invisible':[('is_booking','=',False)]}">
                             <group>
-                            <field name="hs_team_id"/>
+                            <field name="hs_dummy_team_id"/>
+                            <field name="hs_team_id" invisible="1"/>
                             <field name="hs_team_leader_id" placeholder="Dropdown of employees"/>
                             </group>
                             <group>
                             <field name="booking_start" attrs="{'required':[('is_booking','=',True)]}"/>
                             <field name="booking_end" attrs="{'required':[('is_booking','=',True)]}"/>
+                            
                             </group>                         
                             <field name="hs_employee_ids" nolabel="1">
                                 <tree>
@@ -35,6 +37,8 @@
                                     <field name="name" string="Serial No."/>
                                 </tree>
                             </field>
+                             <button name="check_booking_order" type="object" string="Check"  class="oe_stat_button"/>
+                             <button name="validate_booking_order" type="object" string="Validate"  class="oe_stat_button"/>
                             </div>
                     
                     </xpath>
