@@ -5,6 +5,28 @@ from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import RedirectWarning
 
+class validate_wizard(models.TransientModel):
+    _name="hs.validate.wizard"
+    
+    @api.model
+    def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
+        res = super(validate_wizard, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if res and 'arch' in res and res['arch']:
+            partial_label = self.env.context.get('partial label')[:-1]+', are you sure you want to validate?'
+            res['arch']=res['arch'].replace('---dynamic value---',partial_label)
+        return res    
+    
+    @api.multi
+    def validate_booking(self):
+        #create calendar.event entry
+        #req:name
+        #partner_ids
+        #hs_equipment_ids
+        #start_datetime
+        #duration
+        raise ValidationError('Create work order first!')
+    
+
 class booking_order(models.Model):
     
     _name="booking.order"
@@ -77,7 +99,7 @@ class booking_order(models.Model):
         return list(set(temp_res))
             
     @api.multi
-    def check_booking_order(self):
+    def check_booking_order(self,except_raise=False):
         team_leader_overlap = self._check_team_leader_book_overlap()        
         employees_overlap = self._check_employees_book_overlap()
         equipment_overlap = self._check_equipments_book_overlap()
@@ -85,16 +107,45 @@ class booking_order(models.Model):
         
         base_str=' has an event on that day and time.'
         temp_list=[]
+        res_str=''
         for x in [team_leader_overlap,employees_overlap,equipment_overlap]:
             if x:
                 temp_list+=x
-
         if temp_list:
-            raise ValidationError(_(" and ".join([", ".join(temp_list[:-1]),temp_list[-1]])+base_str))
-        else:
-            raise RedirectWarning(_(' Everyone is available for the booking'))
+            res_str=_(" and ".join([", ".join(temp_list[:-1]),temp_list[-1]])+base_str)
+
+        
+        if not except_raise:
+
+            if temp_list:
+                raise ValidationError(res_str)
+            else:
+                raise RedirectWarning(_(' Everyone is available for the booking'))
+        return res_str
  
         
     @api.multi
     def validate_booking_order(self):
-        print 'validate_booking_order'
+        res_str=self.check_booking_order(True)
+        passed_context={'partial label':res_str,
+                        'booking_start':self.booking_start,
+                        'booking_end':self.booking_end,
+                        'hs_team_leader_id':(self.hs_team_leader_id._name,self.hs_team_leader_id.id),
+                        'hs_employee_ids':(self.hs_employee_ids._name,[x.id for x in self.hs_employee_ids]),
+                        'hs_equipment_ids':(self.hs_equipment_ids._name,[x.id for x in self.hs_equipment_ids])
+                        }
+        print 'passed_context',passed_context
+        if res_str:
+            res =  {
+                            
+                            'type'      : 'ir.actions.act_window',
+                            'res_model' : 'hs.validate.wizard',
+                            'view_id'   : self.env.ref('booking_service.hs_validate_wizard', False).id,
+                            'context'   : passed_context,
+                            'view_type' : 'form',
+                            'view_mode' : 'form',
+                            'target'    : 'new'
+                        }   
+        else:
+            self.env['hs.validate.wizard'].validate_booking()    
+        return res 

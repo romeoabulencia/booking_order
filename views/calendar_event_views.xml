@@ -10,7 +10,13 @@
                 <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//field[@name='partner_ids']" position="after">
-                        <field name="hs_equipment_ids"/>
+                        <field name="hs_equipment_ids">
+                                <tree>
+                                    <field name="product_id" string="Equipments"/>
+                           
+                                    <field name="name" string="Serial No."/>
+                                </tree>                        
+                        </field>
                     </xpath>
                 </field>
             </record>

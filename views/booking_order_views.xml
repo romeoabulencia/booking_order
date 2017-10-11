@@ -38,7 +38,7 @@
                                 </tree>
                             </field>
                              <button name="check_booking_order" type="object" string="Check"  class="oe_stat_button"/>
-                             <button name="validate_booking_order" type="object" string="Validate"  class="oe_stat_button"/>
+                             <button name="validate_booking_order" type="object" string="Validate" class="oe_stat_button"/>
                             </div>
                     
                     </xpath>
@@ -85,6 +85,25 @@
                 <field name="tree_view_id" ref="booking_order_tree_view"/>
             </record>
             
+            
+<!-- Validate wizard -->         
+
+<record id="hs_validate_wizard" model="ir.ui.view">
+    <field name="name">Validate</field>
+    <field name="model">hs.validate.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Validate">
+            <group>
+                <label string="---dynamic value---"/>
+            </group>
+            <footer>
+                <button name="validate_booking" string="Yes" type="object" class="oe_highlight"/>
+                or
+                <button string="No" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>   
 
             
 
