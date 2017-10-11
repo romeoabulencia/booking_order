@@ -3,6 +3,7 @@ from odoo import fields
 from odoo import models
 from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.exceptions import RedirectWarning
 
 class booking_order(models.Model):
     
@@ -90,6 +91,9 @@ class booking_order(models.Model):
 
         if temp_list:
             raise ValidationError(_(" and ".join([", ".join(temp_list[:-1]),temp_list[-1]])+base_str))
+        else:
+            raise RedirectWarning(_(' Everyone is available for the booking'))
+ 
         
     @api.multi
     def validate_booking_order(self):
