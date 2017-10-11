@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+           <record model="ir.ui.view" id="work_order_form_view">
+                <field name="name">work.order.form</field>
+                <field name="model">work.order</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Work Order">
+                        <group>
+                            <group>
+                                <field name="scheduled_start"/>
+                                <field name="scheduled_end"/>
+                                <field name="hs_team_id"/>
+                                <field name="hs_team_leader_id"/>
+                                <field name="hs_employee_ids"/>
+                                <field name="hs_equipment_ids"/>
+                            </group>
+                            
+                            <group>
+                                <field name="actual_start"/>
+                                <field name="actual_end"/>
+                            
+                                <field name="booking_id"/>
+                            </group>                       
+                        
+                        </group>
+                    </form>
+                </field>
+            </record>
+            
+            <record model="ir.ui.view" id="work_order_tree_view">
+                <field name="name">work.order.tree</field>
+                <field name="model">work.order</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Work Order">
+                        <field name="hs_team_id"/>
+                        <field name="hs_team_leader_id"/>
+                        <field name="actual_start"/>
+                            <field name="actual_end"/>                    
+                        
+                    </tree>
+                </field>
+            </record>        
+            
+        <record model="ir.ui.view" id="work_order_calendar_view" >
+            <field name="name">work.order.calendar</field>
+            <field name="model">work.order</field>
+            <field name="arch" type="xml">
+                <calendar string="Work Order" date_start="actual_start" date_stop="actual_end">
+                        <field name="hs_team_id"/>
+                        <field name="hs_team_leader_id"/>
+                        <field name="actual_start"/>
+                            <field name="actual_end"/>
+                        
+                </calendar>
+            </field>
+        </record>            
+                
+            <record model="ir.actions.act_window" id="action_work_order_tree_view">
+                <field name="name">Work Order</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">work.order</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form,calendar</field>
+                <field name="view_id" ref="work_order_tree_view"/>
+            </record>
+
+
+</odoo>

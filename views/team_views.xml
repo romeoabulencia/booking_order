@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+           <record model="ir.ui.view" id="hasmicro_team_form_view">
+                <field name="name">hasmicro.team.form</field>
+                <field name="model">hasmicro.team</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Team">
+                        <sheet>
+<div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Team Name" required="True"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <label for="hs_team_leader_id" colspan="1"/>
+                            <field name="hs_team_leader_id" nolabel="1" colspan="3" placeholder="Dropdown of employees"/>
+                            </group><group>
+                            <field name="hs_employee_ids" nolabel="1">
+                                <tree>
+                                    <field name="name" string="Employee"/>
+                                </tree>
+                            </field>
+                            </group><group>
+                            <field name="hs_equipment_ids" nolabel="1">
+                                <tree>
+                                    <field name="product_id" string="Equipments"/>
+                           
+                                    <field name="name" string="Serial No."/>
+                                </tree>
+                            </field>
+                            </group>
+                       </sheet>
+                       
+                       
+                    </form>
+                </field>
+            </record>
+            
+            <record model="ir.ui.view" id="hasmicro_team_tree_view">
+                <field name="name">hasmicro.team.tree</field>
+                <field name="model">hasmicro.team</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Team">
+                        <field name="name"/>
+                        <field name="hs_team_leader_id"/>
+                    </tree>
+                </field>
+            </record> 
+            
+            <record model="ir.actions.act_window" id="action_hasmicro_team_tree_view">
+                <field name="name">Team</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">hasmicro.team</field>
+		   <!-- <field name="domain">[('field_name','condition',criteria)]</field>-->
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hasmicro_team_tree_view"/>
+            </record>
+
+
+
+</odoo>

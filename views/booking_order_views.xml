@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+		 <record model="ir.ui.view" id="sale_order_form_view">
+                <field name="name">sale.order.form</field>
+                <field name="model">sale.order</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="sale.view_order_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//group[@name='technical']" position="after">
+                        <group>
+                        <field name="is_booking"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']/../field[last()]" position="after">
+                        <div colspan="2" attrs="{'invisible':[('is_booking','=',False)]}">
+                            <group>
+                            <field name="hs_team_id"/>
+                            <field name="hs_team_leader_id" placeholder="Dropdown of employees"/>
+                            </group>
+                            <group>
+                            <field name="booking_start" attrs="{'required':[('is_booking','=',True)]}"/>
+                            <field name="booking_end" attrs="{'required':[('is_booking','=',True)]}"/>
+                            </group>                         
+                            <field name="hs_employee_ids" nolabel="1">
+                                <tree>
+                                    <field name="name" string="Employee"/>
+                                </tree>
+                            </field>
+                            <field name="hs_equipment_ids" nolabel="1">
+                                <tree>
+                                    <field name="product_id" string="Equipments"/>
+                           
+                                    <field name="name" string="Serial No."/>
+                                </tree>
+                            </field>
+                            </div>
+                    
+                    </xpath>
+                    
+                </field>
+            </record>
+
+            
+            <record model="ir.ui.view" id="booking_order_tree_view">
+                <field name="name">booking.order.tree</field>
+                <field name="model">sale.order</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Booking Order">
+                        <field name="hs_team_id"/>
+                        <field name="hs_team_leader_id"/>
+                        <field name="booking_start"/>
+                        <field name="booking_end"/>
+                    </tree>
+                </field>
+            </record>     
+            
+        <record model="ir.ui.view" id="booking_order_calendar_view" >
+            <field name="name">booking.order.calendar</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <calendar string="Booking Order" date_start="booking_start" date_stop="booking_end" color="hs_team_id">
+                        <field name="hs_team_id"/>
+                        <field name="hs_team_leader_id"/>
+                        <field name="booking_start"/>
+                            <field name="booking_end"/>
+                        
+                </calendar>
+            </field>
+        </record>
+        
+            <record model="ir.actions.act_window" id="action_booking_order_tree_view">
+                <field name="name">Booking Order</field>
+                <field name="res_model">sale.order</field>
+                <field name="view_mode">calendar,tree,form,</field>
+                <field name="domain">[('is_booking','=',True)]</field>
+                <field name="context">{'default_is_booking':True}</field>
+                <field name="calendar_view_id" ref="booking_order_calendar_view"/>
+                <field name="tree_view_id" ref="booking_order_tree_view"/>
+            </record>
+            
+
+            
+
+            
+            
+
+
+</odoo>

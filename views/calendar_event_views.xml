@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<odoo>
+
+		 <record model="ir.ui.view" id="view_calendar_event_form_view">
+                <field name="name">calendar.event.form</field>
+                <field name="model">calendar.event</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='partner_ids']" position="after">
+                        <field name="hs_equipment_ids"/>
+                    </xpath>
+                </field>
+            </record>
+
+</odoo>

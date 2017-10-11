@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <menuitem id="hs_booking_menu" name="Booking" />
+    <menuitem id="hs_booking_order_menu" name="Booking Order" parent="hs_booking_menu" action="action_booking_order_tree_view" sequence="1"/>
+	<menuitem id="hs_work_order_menu" name="Work Order" parent="hs_booking_menu" action="action_work_order_tree_view" sequence="2"/>
+	<menuitem id="hs_team_menu" name="Team" parent="hs_booking_menu" action="action_hasmicro_team_tree_view" sequence="3"/>    		
+    
+</odoo>
