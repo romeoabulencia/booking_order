@@ -4,6 +4,11 @@ from odoo import models
 from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import RedirectWarning
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from datetime import datetime
+from calendar import calendar
+
+
 
 class validate_wizard(models.TransientModel):
     _name="hs.validate.wizard"
@@ -19,11 +24,36 @@ class validate_wizard(models.TransientModel):
     @api.multi
     def validate_booking(self):
         #create calendar.event entry
-        #req:name
-        #partner_ids
-        #hs_equipment_ids
-        #start_datetime
-        #duration
+        data=self.env.context.get('data')
+        name=' '.join([data['team_name'],data['booking_start']])
+        target_employee_ids = list(set(data['hs_employee_ids'][1]+data['hs_team_leader_id'][1]))
+        target_employee_ids = self.env['hr.employee'].browse(target_employee_ids)
+        partner_ids=[]
+        for x in target_employee_ids:
+            if x.user_id.partner_id.id:
+               partner_ids.append(x.user_id.partner_id.id) 
+        
+        hs_equipment_ids=data['hs_equipment_ids'][1]
+        start_datetime=data['booking_start']
+        end_datetime=data['booking_end']
+        duration = (datetime.strptime(end_datetime,DTF)-datetime.strptime(start_datetime,DTF)).seconds/float(3600)
+
+
+        calendar_event_data={
+            'name':name,
+            'partner_ids':partner_ids,
+            'hs_equipment_ids':hs_equipment_ids,
+            'start_datetime':start_datetime,
+            'stop_datetime':end_datetime,
+            'start':start_datetime,
+            'stop':end_datetime,
+            'duration':duration,
+            }
+
+        calendar_event_id = self.env['calendar.event'].create(calendar_event_data)
+        active_model=str(self.env.context.get('active_model'))
+        active_ids=self.env.context.get('active_ids')
+        self.env[active_model].browse(active_ids).write({'calendar_event_id':calendar_event_id.id})
         raise ValidationError('Create work order first!')
     
 
@@ -37,6 +67,8 @@ class booking_order(models.Model):
     booking_start = fields.Datetime(string="Booking Start",)
     booking_end= fields.Datetime(string="Booking End",)
     sale_order_id = fields.Many2one('sale.order',string="Sale Order")
+    calendar_event_id = fields.Many2one('calendar.event',string="Calendar Event")
+    
 
     @api.onchange('hs_team_id')
     def onchange_hs_team_id(self):
@@ -127,15 +159,19 @@ class booking_order(models.Model):
     @api.multi
     def validate_booking_order(self):
         res_str=self.check_booking_order(True)
-        passed_context={'partial label':res_str,
-                        'booking_start':self.booking_start,
-                        'booking_end':self.booking_end,
-                        'hs_team_leader_id':(self.hs_team_leader_id._name,self.hs_team_leader_id.id),
-                        'hs_employee_ids':(self.hs_employee_ids._name,[x.id for x in self.hs_employee_ids]),
-                        'hs_equipment_ids':(self.hs_equipment_ids._name,[x.id for x in self.hs_equipment_ids])
-                        }
-        print 'passed_context',passed_context
+
         if res_str:
+            data={  'booking_start':self.booking_start,
+                    'booking_end':self.booking_end,
+                    'hs_team_leader_id':(self.hs_team_leader_id._name,[self.hs_team_leader_id.id]),
+                    'hs_employee_ids':(self.hs_employee_ids._name,[x.id for x in self.hs_employee_ids]),
+                    'hs_equipment_ids':(self.hs_equipment_ids._name,[x.id for x in self.hs_equipment_ids]),
+                    'team_name':self.hs_team_id.name,
+                    }
+            
+            passed_context={'partial label':res_str,
+                            'data':data,
+                            }            
             res =  {
                             
                             'type'      : 'ir.actions.act_window',
