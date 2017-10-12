@@ -4,14 +4,18 @@ from odoo import models
 
 class work_order(models.Model):
     _name="work.order"
-    _inherits = {  'hasmicro.team': 'team_id'   }
+    _inherits = {  'hasmicro.team': 'hs_team_id'   }
     
     booking_id = fields.Many2one('booking.order',strting="Booking")
-    scheduled_start = fields.Date('Scheduled Date')
-    scheduled_end = fields.Date('Scheduled End')
-    actual_start = fields.Date('Actual Start')
-    actual_end = fields.Date('Actual End')
+    scheduled_start = fields.Datetime('Scheduled Datetime',related="booking_id.booking_start")
+    scheduled_end = fields.Datetime('Scheduled End',related="booking_id.booking_end")
+    actual_start = fields.Datetime('Actual Start')
+    actual_end = fields.Datetime('Actual End')
     hs_team_id = fields.Many2one('hasmicro.team',string="Team")
-#     team_leader_id = fields.Many2one('hr.employee',string="Team Leader")
-#     employee_ids = fields.Many2many('hr.employee',string="Employees")
-#     equipment_ids= fields.Many2many('product.product',string="Equipments")
+
+
+#     @api.onchange('booking_id')
+#     def onchange_booking_id(self):
+#         if self.booking_id:
+#             self.actual_start=self.booking_id.booking_start
+#             self.actual_end=self.booking_id.booking_end

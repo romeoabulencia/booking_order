@@ -70,6 +70,12 @@ class booking_order(models.Model):
     calendar_event_id = fields.Many2one('calendar.event',string="Calendar Event")
     
 
+    @api.onchange('hs_dummy_team_id')
+    def onchange_dummy_team_id(self):
+        self.hs_team_id=self.hs_dummy_team_id
+         
+    
+
     @api.onchange('hs_team_id')
     def onchange_hs_team_id(self):
         if self.hs_team_id:

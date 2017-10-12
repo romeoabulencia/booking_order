@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+		 <record model="ir.ui.view" id="view_picking_form_form_view">
+                <field name="name">stock.picking.form</field>
+                <field name="model">stock.picking</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='number_of_packages']" position="after">
+                        <field name="is_booking"/>
+                    </xpath>    
+                                                    <xpath expr="//field[@name='partner_id']/../field[last()]" position="after">
+                        <div colspan="2" attrs="{'invisible':[('is_booking','=',False)]}">
+                            <group>
+                            <field name="scheduled_start" required="1"/>
+                            <field name="scheduled_end" required="1"/>
+                            <field name="actual_start" required="1"/>
+                            <field name="actual_start" required="1"/>
+                            <field name="hs_dummy_team_id"/>
+                            <field name="hs_team_id" invisible="1"/>
+                            <field name="hs_team_leader_id" placeholder="Dropdown of employees"/>
+                            </group>
+                            <field name="hs_employee_ids" nolabel="1">
+                                <tree>
+                                    <field name="name" string="Employee"/>
+                                </tree>
+                            </field>
+                            <field name="hs_equipment_ids" nolabel="1">
+                                <tree>
+                                    <field name="product_id" string="Equipments"/>
+                           
+                                    <field name="name" string="Serial No."/>
+                                </tree>
+                            </field>
+                            <group>
+                            <field name="calendar_event_id"/>
+                            </group>
+
+                            </div>
+                            
+                    
+                    </xpath>
+                    <xpath expr="//button[@name='action_confirm']" position="before">
+                             <button name="check_booking_order" type="object" string="Check"  class="oe_stat_button" attrs="{'invisible':[('calendar_event_id','!=',False)]}"/>
+                             <button name="validate_booking_order" type="object" string="Validate" class="oe_stat_button" attrs="{'invisible':[('calendar_event_id','!=',False)]}"/>                    
+                    </xpath>
+                </field>
+            </record>
+
+</odoo>

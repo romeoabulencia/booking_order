@@ -38,7 +38,7 @@
                                 </tree>
                             </field>
                             <group>
-                            <field name="calendar_event_id"/>
+                            <field name="calendar_event_id" invisible="1"/>
                             </group>
                              <button name="check_booking_order" type="object" string="Check"  class="oe_stat_button" attrs="{'invisible':[('calendar_event_id','!=',False)]}"/>
                              <button name="validate_booking_order" type="object" string="Validate" class="oe_stat_button" attrs="{'invisible':[('calendar_event_id','!=',False)]}"/>

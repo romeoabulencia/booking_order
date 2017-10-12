@@ -39,6 +39,9 @@
         #work order views
         'views/work_order_views.xml',
         
+        #deliver order views
+        'views/deliver_order_views.xml',
+        
         #team views
         'views/team_views.xml',
         

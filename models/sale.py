@@ -17,12 +17,16 @@ class sale_order(models.Model):
     
     @api.onchange('hs_dummy_team_id')
     def onchange_dummy_team_id(self):
-        self.booking_id.onchange_dummy_team_id()
+        self.hs_team_id=self.hs_dummy_team_id
          
     
+
     @api.onchange('hs_team_id')
     def onchange_hs_team_id(self):
-        self.booking_id.onchange_hs_team_id()
+        if self.hs_team_id:
+            self.hs_team_leader_id=self.hs_team_id.hs_team_leader_id
+            self.hs_employee_ids=self.hs_team_id.hs_employee_ids
+            self.hs_equipment_ids = self.hs_team_id.hs_equipment_ids
             
     @api.onchange('booking_start')
     def onchange_booking_start(self):
